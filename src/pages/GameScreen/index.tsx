@@ -1,7 +1,8 @@
 import React from 'react';
 import {Button, Text, TouchableOpacity, View} from 'react-native';
 import {styles} from './style';
-import {Board, Player} from './Gamescreen.structure';
+import {Board, IData, Player} from './Gamescreen.structure';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function GameScreen() {
   const [board, setBoard] = React.useState<Board>(Array(9).fill(null));
@@ -11,7 +12,20 @@ export default function GameScreen() {
     X: 0,
     O: 0,
   });
-
+  const [data, setData] = React.useState<IData>({
+    playerX: '',
+    playerO: '',
+  });
+  const getData = async () => {
+    try {
+      const savedData = await AsyncStorage.getItem('data');
+      const currentData = JSON.parse(savedData as string);
+      console.log('currentData', currentData);
+      setData(currentData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleClick = (index: number) => {
     if (board[index] || winner) {
       return;
@@ -110,12 +124,22 @@ export default function GameScreen() {
       </Text>
       <View style={styles.buttonsView}>
         <Button title="Limpar Tabuleiro" onPress={resetGame} />
+        <Button
+          title="Get user"
+          onPress={() => {
+            getData();
+          }}
+        />
         <Button title="Limpar Placar" onPress={clearScore} />
       </View>
       <View style={styles.scoreContainer}>
         <Text style={styles.score}>Placar:</Text>
-        <Text>playerX: {score.X}</Text>
-        <Text>playerO: {score.O}</Text>
+        <Text>
+          {data.playerX ?? 'playerX'}: {score.X}
+        </Text>
+        <Text>
+          {data.playerO ?? 'playerO'}: {score.O}
+        </Text>
       </View>
     </View>
   );
