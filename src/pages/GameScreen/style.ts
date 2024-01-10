@@ -16,7 +16,12 @@ export const styles = StyleSheet.create({
     fontSize: 18,
   },
   buttonTextView: {flex: 1},
-  container: {alignItems: 'center', marginTop: 50},
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 50,
+    justifyContent: 'center',
+  },
   title: {fontSize: 24, marginBottom: 10},
   gameRow: {flexDirection: 'row', marginBottom: 10},
   scoreText: {fontSize: 18, marginTop: 10},

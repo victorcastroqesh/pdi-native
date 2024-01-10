@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useState} from 'react';
 import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
 
@@ -6,9 +7,22 @@ const ConfigScreen: React.FC<{navigation: any}> = ({navigation}) => {
   const [playerO, setPlayerO] = useState('');
 
   const handleStartGame = () => {
+    storeUser();
     navigation.navigate('Game');
   };
 
+  const data = {
+    playerX,
+    playerO,
+  };
+
+  const storeUser = async () => {
+    try {
+      await AsyncStorage.setItem('data', JSON.stringify(data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Configuração de Nomes</Text>

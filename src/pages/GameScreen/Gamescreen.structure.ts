@@ -1,4 +1,4 @@
-export interface IGameScreenProps {
+export interface IData {
   playerX: string;
   playerO: string;
 }
