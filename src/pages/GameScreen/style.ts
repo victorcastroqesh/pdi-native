@@ -15,7 +15,11 @@ export const styles = StyleSheet.create({
     textAlignVertical: 'center',
     fontSize: 18,
   },
-  buttonTextView: {flex: 1},
+  buttonTextView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -28,4 +32,14 @@ export const styles = StyleSheet.create({
   buttonsView: {flexDirection: 'column', marginTop: 20, gap: 5},
   scoreContainer: {marginTop: 20},
   score: {fontSize: 18},
+  exitButton: {
+    backgroundColor: 'red',
+    height: 40,
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  exitButtonText: {
+    color: 'white',
+  },
 });

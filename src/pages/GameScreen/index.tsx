@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import {Button, Text, TouchableOpacity, View} from 'react-native';
 import {styles} from './style';
 import {Board, IData, Player} from './Gamescreen.structure';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function GameScreen() {
+const GameScreen: React.FC<{navigation: any}> = ({navigation}) => {
   const [board, setBoard] = React.useState<Board>(Array(9).fill(null));
   const [player, setPlayer] = React.useState<Player>('X');
   const [winner, setWinner] = React.useState<Player | 'Empate' | null>(null);
@@ -12,20 +13,49 @@ export default function GameScreen() {
     X: 0,
     O: 0,
   });
-  const [data, setData] = React.useState<IData>({
-    playerX: '',
-    playerO: '',
-  });
+  const [data, setData] = React.useState({
+    playerX: 'X',
+    playerO: 'O',
+    scoreO: '0',
+    scoreX: '0',
+  } as IData);
+
   const getData = async () => {
     try {
       const savedData = await AsyncStorage.getItem('data');
-      const currentData = JSON.parse(savedData as string);
+      const currentData = JSON.parse(savedData as string) as IData;
       console.log('currentData', currentData);
+      setScore({
+        X: parseFloat(currentData.scoreX),
+        O: parseFloat(currentData.scoreO),
+      });
       setData(currentData);
     } catch (error) {
       console.log(error);
     }
   };
+  React.useEffect(() => {
+    getData();
+  }, []);
+
+  const storeData = React.useCallback(() => {
+    const newData = {
+      playerX: data.playerX,
+      playerO: data.playerO,
+      scoreX: score.X.toString(),
+      scoreO: score.O.toString(),
+    };
+    setData(newData);
+    const updateData = async () => {
+      try {
+        await AsyncStorage.setItem('data', JSON.stringify(newData));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    updateData();
+  }, [score.X, score.O]);
+
   const handleClick = (index: number) => {
     if (board[index] || winner) {
       return;
@@ -124,23 +154,27 @@ export default function GameScreen() {
       </Text>
       <View style={styles.buttonsView}>
         <Button title="Limpar Tabuleiro" onPress={resetGame} />
-        <Button
-          title="Get user"
-          onPress={() => {
-            getData();
-          }}
-        />
         <Button title="Limpar Placar" onPress={clearScore} />
+        <TouchableOpacity
+          style={styles.exitButton}
+          onPress={() => {
+            storeData(), navigation.navigate('Home');
+          }}>
+          <View style={styles.buttonTextView}>
+            <Text style={styles.exitButtonText}>VOLTAR AO MENU</Text>
+          </View>
+        </TouchableOpacity>
       </View>
       <View style={styles.scoreContainer}>
         <Text style={styles.score}>Placar:</Text>
         <Text>
-          {data.playerX ?? 'playerX'}: {score.X}
+          {data.playerX}(X): {score.X}
         </Text>
         <Text>
-          {data.playerO ?? 'playerO'}: {score.O}
+          {data.playerO}(O): {score.O}
         </Text>
       </View>
     </View>
   );
-}
+};
+export default GameScreen;

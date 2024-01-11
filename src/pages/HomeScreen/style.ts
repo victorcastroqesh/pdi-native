@@ -16,4 +16,5 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
   },
+  buttonsView: {flexDirection: 'column', marginTop: 20, gap: 5},
 });
