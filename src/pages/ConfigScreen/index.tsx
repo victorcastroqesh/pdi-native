@@ -6,6 +6,17 @@ const ConfigScreen: React.FC<{navigation: any}> = ({navigation}) => {
   const [playerX, setPlayerX] = useState('');
   const [playerO, setPlayerO] = useState('');
 
+  React.useMemo(() => {
+    const updateData = async () => {
+      try {
+        await AsyncStorage.setItem('data', JSON.stringify({}));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    updateData();
+  }, []);
+
   const handleStartGame = () => {
     storeUser();
     navigation.navigate('Game');
@@ -14,6 +25,8 @@ const ConfigScreen: React.FC<{navigation: any}> = ({navigation}) => {
   const data = {
     playerX,
     playerO,
+    scoreX: 0,
+    scoreO: 0,
   };
 
   const storeUser = async () => {
